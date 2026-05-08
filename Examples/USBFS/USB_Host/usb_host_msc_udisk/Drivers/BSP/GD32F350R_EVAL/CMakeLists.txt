@@ -1,0 +1,10 @@
+project(GD32F350R_EVAL LANGUAGES C CXX ASM)
+
+add_library(GD32F350R_EVAL INTERFACE)
+
+target_include_directories(GD32F350R_EVAL INTERFACE
+    ${DRIVERS_DIR}/BSP/GD32F350R_EVAL
+    ${DRIVERS_DIR}/BSP/GD32F350R_EVAL/LCD_Common
+    )
+
+target_link_libraries(GD32F350R_EVAL INTERFACE GD32F3x0_standard_peripheral)
